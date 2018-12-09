@@ -71,7 +71,7 @@ int main() {
 	completePath.append(".");
 	completePath.append(fileExtension);
 
-	cout << "Reading file: " << completePath << "\n";
+	cout << "Reading file: " << completePath << endl;
 
 	aig = new AIGParser();
 	if (!aig->openAigFile(completePath))
@@ -89,7 +89,7 @@ int main() {
 	if (returnReadHeader != 0)
 		return 2;
 
-	cout << aig->listHeader() << "\n";
+	cout << aig->listHeader() << endl;
 
 	aig->instanceArraysFanIn();
 
@@ -105,7 +105,7 @@ int main() {
 
 	aig->closeAigFile();
 
-	cout << "\n";
+	cout << endl;
 
 	fileLog.close();
 	return 0;
