@@ -21,17 +21,21 @@ public:
 
 	unsigned int readInputs(unsigned int posArray, bool AagFile);
 	unsigned int getNumInputs();
-	string listArraysFanIn();
+	string listArraysFanIn(unsigned int startPosition, unsigned int endPosition);
 
 	void readOutputs();
+	unsigned int getNumOutputs();
 	string listArrayOutputs();
+
+	unsigned int readAnds(unsigned int posArray);
+	unsigned int getNumAnds();
 
 	bool closeAigFile();
 	virtual ~AIGParser();
 
 private:
 	string listHeaderString;
-	string listArrayInputString;
+	string listArraysFanInString;
 	ifstream fileAig;
 	unsigned int numInputs;
 	unsigned int numLatches;

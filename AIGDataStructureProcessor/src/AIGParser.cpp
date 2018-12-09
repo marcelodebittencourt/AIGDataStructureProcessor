@@ -20,7 +20,7 @@ AIGParser::AIGParser() {
 	arrayOutputs = nullptr;
 
 	listHeaderString = "";
-	listArrayInputString = "";
+	listArraysFanInString = "";
 }
 
 bool AIGParser::openAigFile(string completePath) {
@@ -132,23 +132,24 @@ unsigned int AIGParser::getNumInputs() {
 	return numInputs;
 }
 
-string AIGParser::listArraysFanIn() {
+string AIGParser::listArraysFanIn(unsigned int startPosition, unsigned int endPosition) {
 
-	listArrayInputString.append("List of INPUTS:\n");
+	//cout << startPosition << " " << endPosition << endl;
 
-	for (unsigned int i = 1; i <= numInputs; i++) {
-		listArrayInputString.append("Position->");
-		listArrayInputString.append(to_string(i));
+	listArraysFanInString = "";
+	for (unsigned int i = startPosition; i <= endPosition; i++) {
+		listArraysFanInString.append("Position->");
+		listArraysFanInString.append(to_string(i));
 
-		listArrayInputString.append(" FanIn1->");
-		listArrayInputString.append(to_string(arrayFanIn1[i]));
+		listArraysFanInString.append(" FanIn1->");
+		listArraysFanInString.append(to_string(arrayFanIn1[i]));
 
-		listArrayInputString.append(" FanIn2->");
-		listArrayInputString.append(to_string(arrayFanIn2[i]));
+		listArraysFanInString.append(" FanIn2->");
+		listArraysFanInString.append(to_string(arrayFanIn2[i]));
 
-		listArrayInputString.append("\n");
+		listArraysFanInString.append("\n");
 	}
-	return listArrayInputString;
+	return listArraysFanInString;
 }
 
 void AIGParser::readOutputs() {
@@ -163,6 +164,10 @@ void AIGParser::readOutputs() {
 	}
 }
 
+unsigned int AIGParser::getNumOutputs() {
+	return numOutputs;
+}
+
 string AIGParser::listArrayOutputs() {
 	string listArrayOutputsString = "";
 	listArrayOutputsString.append("List of Outputs:\n");
@@ -171,6 +176,55 @@ string AIGParser::listArrayOutputs() {
 				"Output " + to_string(i) + "->" + to_string(arrayOutputs[i]) + "\n");
 	return listArrayOutputsString;
 }
+
+unsigned int AIGParser::readAnds(unsigned int posArray) {
+	string line;
+
+	unsigned int counterArrayWords {0};
+	string wordRead;
+	string *arrayWords;
+	arrayWords = new string [100];
+
+	string strHeader;
+	istringstream iss(line); //copy the line to a string stream to be able to extract the word (separated by blanks)
+	counterArrayWords = -1;
+	unsigned int numPosArray {0};
+	unsigned int numNodeArray {0};
+
+	for (unsigned int i=0; i<numAnds; i++) {
+		getline(fileAig, line);
+
+		strHeader = line;
+		istringstream iss(line); //copy the line to a string stream to be able to extract the word (separated by blanks)
+		counterArrayWords = -1;
+
+		do { //loop to read word by word
+			iss >> wordRead;
+			//check if the text is different from empty
+			if ( wordRead != "" ) { //if the read word has at least one character
+				counterArrayWords++;
+				arrayWords[counterArrayWords] = wordRead; //insert each string separated by blanks in a position of array
+				//wordRead == "";
+			} //end of if word has at least one character
+		} while (iss); //end of the loop that reads a line word by word
+		numNodeArray = stoi(arrayWords[0]);
+
+		numPosArray = numNodeArray/2;
+
+		arrayFanIn1[numPosArray] = stoi(arrayWords[1]);
+		arrayFanIn2[numPosArray] = stoi(arrayWords[2]);
+
+		posArray++;
+	}
+	delete[] arrayWords;
+
+	return posArray;
+}
+
+unsigned int AIGParser::getNumAnds() {
+	return numAnds;
+}
+
 
 bool AIGParser::closeAigFile() {
 	fileAig.close();
@@ -186,4 +240,3 @@ AIGParser::~AIGParser() {
 
 }
 }
-
