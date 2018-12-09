@@ -13,4 +13,4 @@ Some operations are logged in a .log file.
 
 AIGER specification: http://fmv.jku.at/aiger
 
-
+The data structure implemented in this repository was proposed in the Marcelo de Bittencourt's master thesis - advisor Prof. Dr. André Inácio Reis.
