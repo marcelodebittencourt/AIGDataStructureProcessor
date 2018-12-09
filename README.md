@@ -5,7 +5,9 @@ Operations:
 
 - Open an AIGER ASCII file (.aag): an example file is opened (C17.aag) available at resources folder
 
-- List header content
+- Read and store AIGER file in the data structure
+
+- List data structure content
 
 - Close file
 
